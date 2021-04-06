@@ -33,6 +33,15 @@
                 </DockPanel>
                 <DockPanel>
                     <Button Content="Вычислить" FontSize="14" Click="Result_Click"  Height="auto" Width="auto"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Click="zoomUp_Click">Zoom Up</Button>
+                        <Button Grid.Column="1" Click="zoomDown_Click">Zoom Down</Button>
+                    </Grid>
+                    
                 </DockPanel>
             </StackPanel>
         </Border>
@@ -45,19 +54,31 @@
         <Border MaxHeight="100" DockPanel.Dock="Top">
             <DataGrid x:Name="dgRes" BorderBrush="Black" ColumnWidth="*"/>
         </Border>
-        <StackPanel>
-            <Border BorderBrush="Black" DockPanel.Dock="Top" >
-
-                <Canvas Name="Field"
-                            Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                            Width="1000"
-                            MouseLeftButtonDown="CanvasMouseDown"
+        <Border BorderThickness="5">
+            <ScrollViewer x:Name="FieldScroll" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible">
+                <Canvas Name="Field" MouseLeftButtonDown="CanvasMouseDown"
                             MouseLeftButtonUp="CanvasMouseLeave"
                             MouseMove="CanvasMove"
                             MouseLeave="CanvasMouseLeave"
-                            Background="Transparent"/>
-
-            </Border>
-        </StackPanel>
+                            Background="Transparent"
+                        
+                            >
+                    <Canvas.LayoutTransform>
+                        <ScaleTransform x:Name="Transform">
+                            
+                        </ScaleTransform>
+                    </Canvas.LayoutTransform>
+                    <Canvas.ToolTip>
+                        <ToolTip x:Name="tooltip">
+                            <TextBlock x:Name="tip" ></TextBlock>
+                        </ToolTip>
+                    </Canvas.ToolTip>
+                    
+                </Canvas>
+                
+            </ScrollViewer>
+        </Border>
+        
+        
     </DockPanel>
 </Window>

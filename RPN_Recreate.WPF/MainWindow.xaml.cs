@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -19,9 +20,27 @@ namespace RPN_Recreate.WPF
 {
     public partial class MainWindow : Window
     {
+        Label label;
+        Popup popup;
         public MainWindow()
         {
             InitializeComponent();
+
+            label = new Label() { FontSize = 20, Foreground = Brushes.White, Background = Brushes.Black };
+            popup = new Popup() { Child = label };
+            popup.PlacementTarget = Field;
+            popup.Placement = PlacementMode.MousePoint;
+        }
+        void polyLeave(object sender, MouseEventArgs e)
+        {
+            popup.IsOpen = false;
+        }
+
+        void polyMove(object sender, MouseEventArgs e)
+        {
+            Point pos = Mouse.GetPosition(Field);
+            label.Content = $"x:{pos.X:0} y:{pos.Y:0}";
+            popup.IsOpen = true;
         }
         private void Result_Click(object sender, RoutedEventArgs e)
         {
@@ -41,51 +60,49 @@ namespace RPN_Recreate.WPF
                 resultts.Add(new ModelResult(Calculating.XList[i].ToString(), Calculating.ResultList[i].ToString()));
             }
             dgRes.ItemsSource = resultts;
-            Draw();
+            DrawAll();
         }
 
-        private void Draw()
+        private void DrawAll()
         {
-            DrawOXOY();
+            SetField();
+            DrawOX();
+            DrawOY();
             XMarks();
             YMarks();
             DrawNumsX();
             DrawNumsY();
             DrawFunction();
+
+
         }
 
-        private void DrawOXOY()
+        private void DrawOY()
         {
-            Field.Children.Clear();
-            var oX = new Line();
-
-            //var height = Field.ActualHeight;
-            //var width = Field.ActualWidth;
-
-            oX.X1 = 0;
-            oX.Y1 = Field.Height / 2;
-            oX.X2 = Field.Width;
-            oX.Y2 = Field.Height / 2;
-            oX.Stroke = Brushes.Black;
-            oX.StrokeThickness = 2;
-
-            var oY = new Line();
-            oY.X1 = Field.Width / 2;
-            oY.Y1 = 0;
-            oY.X2 = Field.Width / 2;
-            oY.Y2 = Field.Height;
-            oY.Stroke = Brushes.Black;
-            oY.StrokeThickness = 2;
-
-            Field.Children.Add(oX);
-
-            Field.Children.Add(oY);
+            Line oyLine = new Line();
+            oyLine.X1 = Field.Width / 2;
+            oyLine.Y1 = 0;
+            oyLine.X2 = Field.Width / 2;
+            oyLine.Y2 = Field.Height;
+            oyLine.Stroke = Brushes.Black;
+            Field.Children.Add(oyLine);
         }
+        private void DrawOX()
+        {
+            Line oxLine = new Line();
+            oxLine.X1 = 0;
+            oxLine.Y1 = Field.Height / 2;
+            oxLine.X2 = Field.Width;
+            oxLine.Y2 = Field.Height / 2;
+            oxLine.Stroke = Brushes.Black;
+            Field.Children.Add(oxLine);
+        }
+
 
         private void XMarks()
         {
-            var height = Field.ActualHeight;
-            var width = Field.ActualWidth;
+            var height = Field.Height;
+            var width = Field.Width;
 
             for (int i = 0; i <= width / 40; i++)
             {
@@ -97,7 +114,7 @@ namespace RPN_Recreate.WPF
                     Fill = Brushes.Black
                 };
 
-                Canvas.SetLeft(markX, i * 50 - 10);
+                Canvas.SetLeft(markX, i * 40 - 3);
                 Canvas.SetTop(markX, height / 2 - 3);
 
                 Field.Children.Add(markX);
@@ -105,8 +122,8 @@ namespace RPN_Recreate.WPF
         }
         private void YMarks()
         {
-            var height = Field.ActualHeight;
-            var width = Field.ActualWidth;
+            var height = Field.Height;
+            var width = Field.Width;
 
             for (int i = 0; i <= height / 50; i++)
             {
@@ -119,15 +136,14 @@ namespace RPN_Recreate.WPF
                 };
 
                 Canvas.SetLeft(markY, width / 2 - 3);
-                Canvas.SetTop(markY, i * 50 + 3);
-
+                Canvas.SetTop(markY, i * 40 - 3);
                 Field.Children.Add(markY);
             }
         }
         private void DrawNumsY()
         {
-            var height = Field.ActualHeight;
-            var width = Field.ActualWidth;
+            var height = Field.Height;
+            var width = Field.Width;
             for (double i = Math.Round(height / 80, 1); i >= height / -80; i--)
             {
                 Label numY = new Label();
@@ -139,8 +155,8 @@ namespace RPN_Recreate.WPF
         }
         private void DrawNumsX()
         {
-            var height = Field.ActualHeight;
-            var width = Field.ActualWidth;
+            var height = Field.Height;
+            var width = Field.Width;
             for (double i = Math.Round(width / -80, 1); i <= width / 80; i++)
             {
                 Label numX = new Label();
@@ -150,23 +166,60 @@ namespace RPN_Recreate.WPF
                 Field.Children.Add(numX);
             }
         }
+        
         private void DrawFunction()
         {
-            var height = Field.ActualHeight;
-            var width = Field.ActualWidth;
+            var height = Field.Height;
+            var width = Field.Width;
             var func = new Polyline();
+            
+            func.MouseLeave += polyLeave;
+            func.MouseMove += polyMove;
+            func.StrokeThickness = 5;
             func.Points = new PointCollection();
+
 
             for (var i = 0; i < Calculating.ResultList.Count; i++)
             {
+
                 if (double.IsNaN(Calculating.ResultList[i]))
                     continue;
                 func.Points.Add(new Point(width / 2 + 40 * Calculating.XList[i], Math.Round(height / 2 - 40 * Calculating.ResultList[i], 12)));
+
+                
+
             }
             func.Stroke = Brushes.Black;
+
             Field.Children.Add(func);
         }
+        private void SetField()
+        {
+            if (Math.Abs(Function.End) > Math.Abs(Function.Start))
+                Field.Width = Math.Abs(Math.Round(Function.Start) * 80);
+            else
+                Field.Width = Math.Abs(Math.Round(Function.End, 0)) * 80;
+            double maxY = 0;
+            for (int i = 0; i < Calculating.ResultList.Count; i++)
+            {
+                if (Math.Abs(Calculating.ResultList[i]) > maxY)
+                    maxY = Math.Abs(Calculating.ResultList[i]);
+            }
+            Field.Height = Math.Round(maxY, 0) * 80;
+        }
 
+        private void zoomUp_Click(object sender, RoutedEventArgs e)
+        {
+
+            Transform.ScaleX += 0.1;
+            Transform.ScaleY += 0.1;
+        }
+
+        private void zoomDown_Click(object sender, RoutedEventArgs e)
+        {
+            Transform.ScaleX -= 0.1;
+            Transform.ScaleY -= 0.1;
+        }
         private bool isDragAndDrop; // перемещено или нет
         private Point pointDragAndDrop; // точка перемещения
         private Thickness marginDragAndDrop;
@@ -186,13 +239,22 @@ namespace RPN_Recreate.WPF
         }
         private void CanvasMove(object sender, MouseEventArgs e)
         {
+            var current = Mouse.GetPosition(this);
+            var offset = current - pointDragAndDrop;
             if (isDragAndDrop)
             {
-                var current = Mouse.GetPosition(this);
-                var offset = current - pointDragAndDrop; // разница в координатах между текущей и новой
-                Field.Margin = new Thickness(marginDragAndDrop.Left + offset.X, marginDragAndDrop.Top + offset.Y, 0, 0); // само перемещение
+                current = Mouse.GetPosition(this);
+                offset = current - pointDragAndDrop; // разница в координатах между текущей и новой
+                Field.Margin = new Thickness(marginDragAndDrop.Left + offset.X, marginDragAndDrop.Top + offset.Y, 0, 0);
+
+                // само перемещение
             }
         }
     }
-
+    
+    
 }
+
+    
+
+
