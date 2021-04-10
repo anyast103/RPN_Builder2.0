@@ -68,11 +68,6 @@
                             
                         </ScaleTransform>
                     </Canvas.LayoutTransform>
-                    <Canvas.ToolTip>
-                        <ToolTip x:Name="tooltip">
-                            <TextBlock x:Name="tip" ></TextBlock>
-                        </ToolTip>
-                    </Canvas.ToolTip>
                     
                 </Canvas>
                 

@@ -39,7 +39,7 @@ namespace RPN_Recreate.WPF
         void polyMove(object sender, MouseEventArgs e)
         {
             Point pos = Mouse.GetPosition(Field);
-            label.Content = $"x:{pos.X:0} y:{pos.Y:0}";
+            label.Content = $"x:{(pos.X - (Field.Width / 2)) / 40:0} y:{-(pos.Y - (Field.Height / 2)) / 40:0}";
             popup.IsOpen = true;
         }
         private void Result_Click(object sender, RoutedEventArgs e)
@@ -172,7 +172,7 @@ namespace RPN_Recreate.WPF
             var height = Field.Height;
             var width = Field.Width;
             var func = new Polyline();
-            
+
             func.MouseLeave += polyLeave;
             func.MouseMove += polyMove;
             func.StrokeThickness = 5;
@@ -186,11 +186,9 @@ namespace RPN_Recreate.WPF
                     continue;
                 func.Points.Add(new Point(width / 2 + 40 * Calculating.XList[i], Math.Round(height / 2 - 40 * Calculating.ResultList[i], 12)));
 
-                
-
             }
             func.Stroke = Brushes.Black;
-
+            
             Field.Children.Add(func);
         }
         private void SetField()
