@@ -60,9 +60,7 @@
                             MouseLeftButtonUp="CanvasMouseLeave"
                             MouseMove="CanvasMove"
                             MouseLeave="CanvasMouseLeave"
-                            Background="Transparent"
-                        
-                            >
+                            Background="Transparent">
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="Transform">
                             
