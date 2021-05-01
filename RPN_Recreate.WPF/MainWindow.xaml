@@ -60,19 +60,12 @@
                             MouseLeftButtonUp="CanvasMouseLeave"
                             MouseMove="CanvasMove"
                             MouseLeave="CanvasMouseLeave"
-                            Background="Transparent"
-                        
-                            >
+                            Background="Transparent">
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="Transform">
                             
                         </ScaleTransform>
                     </Canvas.LayoutTransform>
-                    <Canvas.ToolTip>
-                        <ToolTip x:Name="tooltip">
-                            <TextBlock x:Name="tip" ></TextBlock>
-                        </ToolTip>
-                    </Canvas.ToolTip>
                     
                 </Canvas>
                 
