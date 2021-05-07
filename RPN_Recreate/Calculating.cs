@@ -9,18 +9,18 @@ namespace RPN_Recreate
         public static List<double> ResultList { get; private set; }
         public static List<double> XList { get; private set; }
 
-        private static List<string> XRange = new List<string> { Function.Start.ToString(), Function.End.ToString() };
+        public static List<string> XRange { get; private set; }
         public Calculating(string[] input)
         {
             ResultList = new List<double>();
             XList = new List<double>();
-
+            XRange = new List<string> { Function.Start.ToString(), Function.End.ToString() };
             for (double i = double.Parse(XRange[0]); i <= double.Parse(XRange[1]); i += Function.Step)
             {
                 XList.Add(i);
-
-                ResultList.Add(Calculate(input, i));
+                ResultList.Add(Calculate(input, i)); 
             }
+            
         }
         public static double Calculate(string[] input, double x)
         {
@@ -50,7 +50,6 @@ namespace RPN_Recreate
                         case "*": result = second * first; break;
                         case "/": result = second / first; break;
                         case "^": result = double.Parse(Math.Pow(double.Parse(second.ToString()), double.Parse(first.ToString())).ToString()); break;
-                        
                     }
                     temp.Push(result);
                 }

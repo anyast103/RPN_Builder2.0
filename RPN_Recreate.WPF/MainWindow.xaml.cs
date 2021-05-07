@@ -32,26 +32,23 @@ namespace RPN_Recreate.WPF
                 Result.Text += i;
             }
 
-            List<ModelResult> resultts = new List<ModelResult>();
+            List<ModelResult> Results = new List<ModelResult>();
             new Calculating(RPN_Recreate.Postfix.GetExpression(Function.Task));
             for (var i = 0; i < Calculating.ResultList.Count; i++)
             {
-                resultts.Add(new ModelResult(Calculating.XList[i].ToString(), Calculating.ResultList[i].ToString()));
+                Results.Add(new ModelResult(Calculating.XList[i].ToString(), Calculating.ResultList[i].ToString()));
             }
-            dgRes.ItemsSource = resultts;
-            IDrawer drawer = new IDrawer();
+            dgRes.ItemsSource = Results;
+            
+            IDrawer drawer = new IDrawer(MyCanvas);
+            Transform.ScaleX = 0.8;
+            Transform.ScaleY = 0.8;
             drawer.DrawAll();
-            if(Function.Task.ToString() != task.Text || Function.Step != double.Parse(StepX.Text) || Function.Start != double.Parse(startRange.Text) || Function.End != double.Parse(endRange.Text))
-            {
-                Field.Children.Clear();
-                
-                drawer.DrawAll();
-            }
+            
         }
 
         private void zoomUp_Click(object sender, RoutedEventArgs e)
         {
-
             Transform.ScaleX += 0.1;
             Transform.ScaleY += 0.1;
         }
@@ -77,7 +74,7 @@ namespace RPN_Recreate.WPF
         {
             isDragAndDrop = true;
             pointDragAndDrop = Mouse.GetPosition(this); // передаём текущее значение позиции курсора
-            marginDragAndDrop = Field.Margin;
+            marginDragAndDrop = MyCanvas.Margin;
         }
         private void CanvasMove(object sender, MouseEventArgs e)
         {
@@ -87,12 +84,11 @@ namespace RPN_Recreate.WPF
             {
                 current = Mouse.GetPosition(this);
                 offset = current - pointDragAndDrop; // разница в координатах между текущей и новой
-                Field.Margin = new Thickness(marginDragAndDrop.Left + offset.X, marginDragAndDrop.Top + offset.Y, 0, 0);
+                MyCanvas.Margin = new Thickness(marginDragAndDrop.Left + offset.X, marginDragAndDrop.Top + offset.Y, 0, 0);
 
                 // само перемещение
             }
         }
-
 
     }
     

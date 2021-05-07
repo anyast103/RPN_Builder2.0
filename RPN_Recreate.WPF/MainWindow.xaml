@@ -33,6 +33,7 @@
                 </DockPanel>
                 <DockPanel>
                     <Button Content="Вычислить" FontSize="14" Click="Result_Click"  Height="auto" Width="auto"/>
+                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -56,7 +57,7 @@
         </Border>
         <Border BorderThickness="5">
             <ScrollViewer x:Name="FieldScroll" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible">
-                <Canvas Name="Field" MouseLeftButtonDown="CanvasMouseDown"
+                <Canvas Name="MyCanvas" MouseLeftButtonDown="CanvasMouseDown"
                             MouseLeftButtonUp="CanvasMouseLeave"
                             MouseMove="CanvasMove"
                             MouseLeave="CanvasMouseLeave"

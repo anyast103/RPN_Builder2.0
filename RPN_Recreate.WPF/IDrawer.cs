@@ -13,25 +13,27 @@ namespace RPN_Recreate.WPF
 {
     class IDrawer
     {
-        public static Label label;
-        public static Popup popup;
+        public static Label CoordinatesBox;
+        public static Popup Popup;
+        private Canvas MyCanvas { get; set; }
 
-        public IDrawer()
+        public IDrawer(Canvas canvas)
         {
-            label = new Label() { FontSize = 20, Foreground = Brushes.White, Background = Brushes.Black };
-            popup = new Popup() { Child = label };
-            popup.PlacementTarget = ((MainWindow)System.Windows.Application.Current.MainWindow).Field;
-            popup.Placement = PlacementMode.MousePoint;
+            MyCanvas = canvas;
+            CoordinatesBox = new Label() { FontSize = 20, Foreground = Brushes.White, Background = Brushes.Black };
+            Popup = new Popup() { Child = CoordinatesBox };
+            Popup.PlacementTarget = MyCanvas;
+            Popup.Placement = PlacementMode.MousePoint;
         }
         void polyLeave(object sender, MouseEventArgs e)
         {
-            popup.IsOpen = false;
+            Popup.IsOpen = false;
         }
         void polyMove(object sender, MouseEventArgs e)
         {
-            Point pos = Mouse.GetPosition(((MainWindow)System.Windows.Application.Current.MainWindow).Field);
-            label.Content = $"x:{(pos.X - (((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width / 2)) / 40:0} y:{-(pos.Y - (((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height / 2)) / 40:0}";
-            popup.IsOpen = true;
+            Point pos = Mouse.GetPosition(MyCanvas);
+            CoordinatesBox.Content = $"x:{(pos.X - (MyCanvas.Width / 2)) / 40:0} y:{-(pos.Y - (MyCanvas.Height / 2)) / 40:0}";
+            Popup.IsOpen = true;
         }
         public void DrawAll()
         {
@@ -42,6 +44,7 @@ namespace RPN_Recreate.WPF
 
         private void DrawCoordinatePlate()
         {
+            MyCanvas.Children.Clear();
             DrawOX();
             DrawOY();
             XMarks();
@@ -52,28 +55,28 @@ namespace RPN_Recreate.WPF
         private void DrawOY()
         {
             Line oyLine = new Line();
-            oyLine.X1 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width / 2;
+            oyLine.X1 = MyCanvas.Width / 2;
             oyLine.Y1 = 0;
-            oyLine.X2 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width / 2;
-            oyLine.Y2 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
+            oyLine.X2 = MyCanvas.Width / 2;
+            oyLine.Y2 = MyCanvas.Height;
             oyLine.Stroke = Brushes.Black;
-            ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(oyLine);
+            MyCanvas.Children.Add(oyLine);
         }
         private void DrawOX()
         {
             Line oxLine = new Line();
             oxLine.X1 = 0;
-            oxLine.Y1 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height / 2;
-            oxLine.X2 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
-            oxLine.Y2 = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height / 2;
+            oxLine.Y1 = MyCanvas.Height / 2;
+            oxLine.X2 = MyCanvas.Width;
+            oxLine.Y2 = MyCanvas.Height / 2;
             oxLine.Stroke = Brushes.Black;
-            ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(oxLine);
+            MyCanvas.Children.Add(oxLine);
         }
 
         private void XMarks()
         {
-            var height = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
-            var width = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
+            var height = MyCanvas.Height;
+            var width = MyCanvas.Width;
 
             for (int i = 0; i <= width / 40; i++)
             {
@@ -87,14 +90,13 @@ namespace RPN_Recreate.WPF
 
                 Canvas.SetLeft(markX, i * 40 - 3);
                 Canvas.SetTop(markX, height / 2 - 3);
-
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(markX);
+                MyCanvas.Children.Add(markX);
             }
         }
         private void YMarks()
         {
-            var height = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
-            var width = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
+            var height = MyCanvas.Height;
+            var width = MyCanvas.Width;
 
             for (int i = 0; i <= height / 50; i++)
             {
@@ -105,43 +107,42 @@ namespace RPN_Recreate.WPF
                     Stroke = Brushes.Black,
                     Fill = Brushes.Black
                 };
-
                 Canvas.SetLeft(markY, width / 2 - 3);
                 Canvas.SetTop(markY, i * 40 - 3);
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(markY);
+                MyCanvas.Children.Add(markY);
             }
         }
         private void DrawNumsY()
         {
-            var height = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
-            var width = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
+            var height = MyCanvas.Height;
+            var width = MyCanvas.Width;
             for (double i = Math.Round(height / 80, 1); i >= height / -80; i--)
             {
                 Label numY = new Label();
                 numY.Content = $"{Math.Round(i, 0)}";
                 Canvas.SetLeft(numY, width / 2 + 6);
                 Canvas.SetTop(numY, (height / 80 - i) * 40 - 15);
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(numY);
+                MyCanvas.Children.Add(numY);
             }
         }
         private void DrawNumsX()
         {
-            var height = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
-            var width = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
+            var height = MyCanvas.Height;
+            var width = MyCanvas.Width;
             for (double i = Math.Round(width / -80, 1); i <= width / 80; i++)
             {
                 Label numX = new Label();
                 numX.Content = $"{Math.Round(i, 0)}";
                 Canvas.SetLeft(numX, (i + width / 80) * 40 - 8);
                 Canvas.SetTop(numX, height / 2 + 6);
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(numX);
+                MyCanvas.Children.Add(numX);
             }
         }
 
         private void DrawFunction()
         {
-            var height = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height;
-            var width = ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width;
+            var height = MyCanvas.Height;
+            var width = MyCanvas.Width;
             var func = new Polyline();
 
             func.MouseLeave += polyLeave;
@@ -161,21 +162,21 @@ namespace RPN_Recreate.WPF
             }
             func.Stroke = Brushes.Black;
 
-            ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Children.Add(func);
+            MyCanvas.Children.Add(func);
         }
         private void SetField()
         {
             if (Math.Abs(Function.End) > Math.Abs(Function.Start))
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width = Math.Abs(Math.Round(Function.Start) * 80);
+                MyCanvas.Width = Math.Abs(Math.Round(Function.Start) * 80);
             else
-                ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Width = Math.Abs(Math.Round(Function.End, 0)) * 80;
+                MyCanvas.Width = Math.Abs(Math.Round(Function.End, 0)) * 80;
             double maxY = 0;
             for (int i = 0; i < Calculating.ResultList.Count; i++)
             {
                 if (Math.Abs(Calculating.ResultList[i]) > maxY)
                     maxY = Math.Abs(Calculating.ResultList[i]);
             }
-            ((MainWindow)System.Windows.Application.Current.MainWindow).Field.Height = Math.Round(maxY, 0) * 80;
+            MyCanvas.Height = Math.Round(maxY, 0) * 80;
         }
     }
 }
