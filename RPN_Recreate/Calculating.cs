@@ -8,7 +8,6 @@ namespace RPN_Recreate
     {
         public static List<double> ResultList { get; private set; }
         public static List<double> XList { get; private set; }
-
         public static List<string> XRange { get; private set; }
         public Calculating(string[] input)
         {
@@ -27,77 +26,50 @@ namespace RPN_Recreate
             double result = 0;
             Stack<double> temp = new Stack<double>();
             double[] nums;
-            for (int i = 0; i < input.Length; i++)
+            
+            for (int i = 0; i < input.Length; i++) //перебираем выражение
             {
                 string a = string.Empty;
-                if (!Postfix.IsOperator(input[i]))
+
+                if (!Postfix.IsOperator(input[i])) //Заносим в стэк НЕоперации
                 {
                     a += input[i] == "x" ? x.ToString() : input[i];
                     i++;
-                    if (i == input.Length) 
+                    if (i == input.Length)
                         break;
                     temp.Push(double.Parse(a)); i--;
-                     
+
                 }
-                else if (Postfix.IsOperator(input[i]))
+                else if (Postfix.IsOperator(input[i])) //Заносим в стэк операции, выбираем нужную, пушим результат
                 {
                     nums = new double[] { temp.Pop(), temp.Pop() };
                     result = ChooseOperation(result, input, nums, i);
                     temp.Push(result);
                 }
             }
-            return temp.Peek();
+            return temp.Peek(); //Достаём результат
         }
-        private static double ChooseOperation(double result, string[] input, double[] nums, int i)
+        private static double ChooseOperation(double result, string[] input, double[] nums, int i) //возвращаем операцию
         {
             switch (input[i])
             {
                 case "+":
-                    Plus plus = new Plus();
-                    result = plus.Calc(nums);
+                    result = new Plus().Calc(nums);
                     break;
                 case "-":
-                    Minus minus = new Minus();
-                    result = minus.Calc(nums);
+                    result = new Minus().Calc(nums);
                     break;
                 case "*":
-                    Multiply mul = new Multiply();
-                    result = mul.Calc(nums);
+                    result = new Multiply().Calc(nums);
                     break;
                 case "/":
-                    Divide div = new Divide();
-                    result = div.Calc(nums);
+                    result = new Divide().Calc(nums);
                     break;
                 case "^":
-                    Rank rank = new Rank();
-                    result = rank.Calc(nums);
+                    result = new Rank().Calc(nums);
                     break;
             }
             return result;
         }
-    }
-    public abstract class Operation
-    {
-        public abstract double Calc(double[] nums);
-    }
-    class Plus : Operation
-    {
-        public override double Calc (double[] nums) => nums[1] + nums[0];
-    }
-    class Minus : Operation
-    {
-        public override double Calc(double[] nums) => nums[1] - nums[0];
-    }
-    class Multiply : Operation
-    {
-        public override double Calc(double[] nums) => nums[1] * nums[0];
-    }
-    class Divide : Operation
-    {
-        public override double Calc(double[] nums) => nums[1] / nums[0];
-    }
-    class Rank : Operation
-    {
-        public override double Calc(double[] nums) => Math.Pow(nums[1],nums[0]);
     }
 }

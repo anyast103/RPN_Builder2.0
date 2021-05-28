@@ -4,7 +4,7 @@ namespace RPN_Recrate.Consolee
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Table.GetRPN();
         }

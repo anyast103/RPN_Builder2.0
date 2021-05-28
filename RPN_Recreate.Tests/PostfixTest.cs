@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RPN_Recreate.Tests
 {
@@ -8,20 +10,12 @@ namespace RPN_Recreate.Tests
         public void Setup()
         {
         }
-
-        [Test]
-        public void CheckRPN()
+        [TestCase("1+2", ExpectedResult = new string[] { "1", "2", "+" })]
+        [TestCase("1*2+3", ExpectedResult = new string[] { "1", "2", "*", "3", "+" })]
+        [TestCase("5*6+(2-9)", ExpectedResult = new string[] { "5", "6", "*", "2", "9", "-", "+" })]
+        public string[] TestFunction(string expression )
         {
-            string[] func = new string[] { "2", "+", "x" };
-            string[] checkTrue = new string[] { "2", "x", "+" };
-            Assert.AreEqual(checkTrue, RPN_Recreate.Postfix.GetExpression(func));
-        }
-        [Test]
-        public void CheckRPN2()
-        {
-            string[] func = new string[] { "8", "+", "x", "-", "2" };
-            string[] checkTrue = new string[] { "8", "x", "2", "-", "+" };
-            Assert.AreEqual(checkTrue, RPN_Recreate.Postfix.GetExpression(func));
+            return RPN_Recreate.Postfix.GetExpression(Regex.Split(expression, @"-?([\W])"));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RPN_Recrate.Consolee
     
     public class Table
     {
-        private static string[] Function = new string[] { "2", "+", "x" };
+        private static readonly string[] Function = new string[] { "2", "+", "x" };
 
         public static void GetRPN()
         {

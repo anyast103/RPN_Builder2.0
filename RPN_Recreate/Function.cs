@@ -6,7 +6,7 @@ namespace RPN_Recreate
 {
     public class Function
     {
-        public static string[] Task { get; set; } = new string[] { };
+        public static string Task { get; set; } 
         public static double Start { get; set; }
         public static double End { get; set; }
         public static double Step { get; set; }

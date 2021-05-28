@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using RPN_Recreate;
 using RPN_Recreate.WPF.Models;
 using RPN_Recrate.Consolee;
-
+using System.Text.RegularExpressions;
 
 namespace RPN_Recreate.WPF
 {
@@ -24,18 +24,18 @@ namespace RPN_Recreate.WPF
     {
         private void Result_Click(object sender, RoutedEventArgs e)
         {
-            Function.Task = task.Text.Split(" ");
+            Function.Task = task.Text;
+            string[] Funct = Regex.Split(Function.Task, @"-?([\W])");
             Function.Step = double.Parse(StepX.Text);
             Function.Start = double.Parse(startRange.Text);
             Function.End = double.Parse(endRange.Text);
             Result.Text = "";
-            foreach (var i in RPN_Recreate.Postfix.GetExpression(Function.Task))
+            foreach (var i in RPN_Recreate.Postfix.GetExpression(Funct))
             {
                 Result.Text += i;
             }
-
             List<ModelResult> Results = new List<ModelResult>();
-            new Calculating(RPN_Recreate.Postfix.GetExpression(Function.Task));
+            new Calculating(RPN_Recreate.Postfix.GetExpression(Funct));
             for (var i = 0; i < Calculating.ResultList.Count; i++)
             {
                 Results.Add(new ModelResult(Calculating.XList[i].ToString(), Calculating.ResultList[i].ToString()));
@@ -47,47 +47,43 @@ namespace RPN_Recreate.WPF
             Transform.ScaleY = 0.8;
             drawer.DrawAll();
         }
-
-        private void zoomUp_Click(object sender, RoutedEventArgs e)
+        private void ZoomUp_Click(object sender, RoutedEventArgs e)
         {
             Transform.ScaleX += 0.1;
             Transform.ScaleY += 0.1;
         }
-
-        private void zoomDown_Click(object sender, RoutedEventArgs e)
+        private void ZoomDown_Click(object sender, RoutedEventArgs e)
         {
             Transform.ScaleX -= 0.1;
             Transform.ScaleY -= 0.1;
         }
 
-        private bool isDragAndDrop; // перемещено или нет
-        private Point pointDragAndDrop; // точка перемещения
-        private Thickness marginDragAndDrop;
+        private bool IsDragAndDrop; // перемещено или нет
+        private Point PointDrugAndDrop; // точка перемещения
+        private Thickness MarginDragAndDrop;
         private void CanvasMouseUp(object sender, MouseButtonEventArgs e)
         {
-            isDragAndDrop = false; // Не перемещается, т.к false
+            IsDragAndDrop = false; // Не перемещается, т.к false
         }
         private void CanvasMouseLeave(object sender, MouseEventArgs e)
         {
-            isDragAndDrop = false; // Не перемещается, т.к false
+            IsDragAndDrop = false; // Не перемещается, т.к false
         }
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
-            isDragAndDrop = true;
-            pointDragAndDrop = Mouse.GetPosition(this); // передаём текущее значение позиции курсора
-            marginDragAndDrop = MyCanvas.Margin;
+            IsDragAndDrop = true;
+            PointDrugAndDrop = Mouse.GetPosition(this); // передаём текущее значение позиции курсора
+            MarginDragAndDrop = MyCanvas.Margin;
         }
         private void CanvasMove(object sender, MouseEventArgs e)
         {
-            var current = Mouse.GetPosition(this);
-            var offset = current - pointDragAndDrop;
-            if (isDragAndDrop)
+            //var current = Mouse.GetPosition(this);
+            //var offset = current - pointDragAndDrop;
+            if (IsDragAndDrop)
             {
-                current = Mouse.GetPosition(this);
-                offset = current - pointDragAndDrop; // разница в координатах между текущей и новой
-                MyCanvas.Margin = new Thickness(marginDragAndDrop.Left + offset.X, marginDragAndDrop.Top + offset.Y, 0, 0);
-
-                // само перемещение
+                var current = Mouse.GetPosition(this);
+                var offset = current - PointDrugAndDrop; // разница в координатах между текущей и новой
+                MyCanvas.Margin = new Thickness(MarginDragAndDrop.Left + offset.X, MarginDragAndDrop.Top + offset.Y, 0, 0); // само перемещение
             }
         }
 

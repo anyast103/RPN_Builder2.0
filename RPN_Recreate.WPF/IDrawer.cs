@@ -54,22 +54,26 @@ namespace RPN_Recreate.WPF
         }
         private void DrawOY()
         {
-            Line oyLine = new Line();
-            oyLine.X1 = MyCanvas.Width / 2;
-            oyLine.Y1 = 0;
-            oyLine.X2 = MyCanvas.Width / 2;
-            oyLine.Y2 = MyCanvas.Height;
-            oyLine.Stroke = Brushes.Black;
+            Line oyLine = new Line
+            {
+                X1 = MyCanvas.Width / 2,
+                Y1 = 0,
+                X2 = MyCanvas.Width / 2,
+                Y2 = MyCanvas.Height,
+                Stroke = Brushes.Black
+            };
             MyCanvas.Children.Add(oyLine);
         }
         private void DrawOX()
         {
-            Line oxLine = new Line();
-            oxLine.X1 = 0;
-            oxLine.Y1 = MyCanvas.Height / 2;
-            oxLine.X2 = MyCanvas.Width;
-            oxLine.Y2 = MyCanvas.Height / 2;
-            oxLine.Stroke = Brushes.Black;
+            Line oxLine = new Line
+            {
+                X1 = 0,
+                Y1 = MyCanvas.Height / 2,
+                X2 = MyCanvas.Width,
+                Y2 = MyCanvas.Height / 2,
+                Stroke = Brushes.Black
+            };
             MyCanvas.Children.Add(oxLine);
         }
 
@@ -118,8 +122,10 @@ namespace RPN_Recreate.WPF
             var width = MyCanvas.Width;
             for (double i = Math.Round(height / 80, 1); i >= height / -80; i--)
             {
-                Label numY = new Label();
-                numY.Content = $"{Math.Round(i, 0)}";
+                Label numY = new Label
+                {
+                    Content = $"{Math.Round(i, 0)}"
+                };
                 Canvas.SetLeft(numY, width / 2 + 6);
                 Canvas.SetTop(numY, (height / 80 - i) * 40 - 15);
                 MyCanvas.Children.Add(numY);
@@ -131,8 +137,10 @@ namespace RPN_Recreate.WPF
             var width = MyCanvas.Width;
             for (double i = Math.Round(width / -80, 1); i <= width / 80; i++)
             {
-                Label numX = new Label();
-                numX.Content = $"{Math.Round(i, 0)}";
+                Label numX = new Label
+                {
+                    Content = $"{Math.Round(i, 0)}"
+                };
                 Canvas.SetLeft(numX, (i + width / 80) * 40 - 8);
                 Canvas.SetTop(numX, height / 2 + 6);
                 MyCanvas.Children.Add(numX);
