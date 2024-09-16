@@ -8,10 +8,10 @@ namespace RPN_Recreate.WPF.Models
     {
         public ModelResult(string range, string results)
         {
-            this.range = range;
-            this.results = results;
+            this.Range = range;
+            this.Results = results;
         }
-        public string range { get; set; }
-        public string results { get; set; }
+        public string Range { get; set; }
+        public string Results { get; set; }
     }
 }

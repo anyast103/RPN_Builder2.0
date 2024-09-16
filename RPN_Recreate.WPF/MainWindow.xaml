@@ -33,13 +33,14 @@
                 </DockPanel>
                 <DockPanel>
                     <Button Content="Вычислить" FontSize="14" Click="Result_Click"  Height="auto" Width="auto"/>
+                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Click="zoomUp_Click">Zoom Up</Button>
-                        <Button Grid.Column="1" Click="zoomDown_Click">Zoom Down</Button>
+                        <Button Grid.Column="0" Click="ZoomUp_Click">Zoom Up</Button>
+                        <Button Grid.Column="1" Click="ZoomDown_Click">Zoom Down</Button>
                     </Grid>
                     
                 </DockPanel>
@@ -56,7 +57,7 @@
         </Border>
         <Border BorderThickness="5">
             <ScrollViewer x:Name="FieldScroll" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible">
-                <Canvas Name="Field" MouseLeftButtonDown="CanvasMouseDown"
+                <Canvas Name="MyCanvas" MouseLeftButtonDown="CanvasMouseDown"
                             MouseLeftButtonUp="CanvasMouseLeave"
                             MouseMove="CanvasMove"
                             MouseLeave="CanvasMouseLeave"

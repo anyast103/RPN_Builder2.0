@@ -1,13 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RPN_Recrate.Consolee\RPN_Recreate.Console.csproj" />
     <ProjectReference Include="..\RPN_Recreate\RPN_Recreate.csproj" />
   </ItemGroup>
 
